@@ -1,8 +1,11 @@
+require('dotenv').config();//para leer el archivo .env
+
 const express = require("express");
 const morgan = require("morgan");
 
 //Inicializations
 const app = express();
+require('./database');
 
 //Settings
 app.set("port",4000);
