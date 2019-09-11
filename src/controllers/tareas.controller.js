@@ -1,6 +1,7 @@
 const tareaController = {};
 
 const TareaModel = require('../models/Tarea');
+const UserModel = require('../models/User');
 
 tareaController.getTareas = async(req,res) => {
     try {
@@ -28,7 +29,8 @@ tareaController.getTarea = async(req,res) => {
 };
 
 tareaController.crearTarea = async (req,res) => {
-    const {title,description} = req.body;
+    const {title,description,userId} = req.body;
+    
     if(!title){
         return res.json({
             success:false,
@@ -43,9 +45,22 @@ tareaController.crearTarea = async (req,res) => {
     }
     const newTarea = new TareaModel({
         title,
-        description
+        description,
+        userId
     });
     try {
+       const usuario = await UserModel.findById(userId);
+       if(!usuario){
+            return res.json({
+                success:false,
+                message:'El usuario no existe o esta Inactivo'
+            });
+       }else if(usuario.estado!='activo'){
+            return res.json({
+                success:false,
+                message:'El usuario está Inactivo'
+            });
+       }
        await newTarea.save();
        res.json({
            success:true,
@@ -74,6 +89,21 @@ tareaController.updateTarea = async (req,res) => {
     }
 };
 
+tareaController.taskCompleted = async (req,res) => {
+    try {
+       await TareaModel.findByIdAndUpdate({_id:req.params.id},req.body);
+       res.json({
+           sucess:true,
+           message:"Tarea completada"
+       });
+    } catch (error) {
+        res.json({
+            success:false,
+            message:"Ha ocurrido algun errror"
+        })
+    }
+};
+
 tareaController.deleteTarea = async (req,res) => {
     try {
        await TareaModel.findByIdAndDelete(req.params.id); 
@@ -88,5 +118,21 @@ tareaController.deleteTarea = async (req,res) => {
        });
     }
 };
+tareaController.taskCompleted = async (req,res) => {
+    try {
+        await TareaModel.findByIdAndUpdate(
+            {_id:req.params.id},
+            {completed:true});
+        res.json({
+            success:true,
+            message:'Task completed'
+        });
+    } catch (error) {
+        res.json({
+            success:false,
+            message:'Ha ocurrido algun error'
+        });
+    }
+}
 
 module.exports = tareaController;

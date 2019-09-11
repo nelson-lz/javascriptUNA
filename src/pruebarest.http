@@ -1,0 +1,8 @@
+DELETE http://localhost:4000/api/users/5d78ee8ce7eee714f1888bfc HTTP/1.1
+content-type: application/json
+
+{
+    "userId":"5d78ee8ce7eee714f1888bfc",
+    "title":"OtraNuevaTarea",
+    "description":"Esta es otra nueva tareaEs una nueva tarea"
+}

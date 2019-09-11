@@ -17,6 +17,7 @@ app.use(express.json());
 
 //Routes
 app.use('/api/tareas', require('./routes/tareas.routes'));//end point task
+app.use('/api/users', require('./routes/users.routes'));//end point users
 
 
 //Starting the server
